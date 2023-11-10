@@ -1,4 +1,5 @@
 import { StyleSheet, View, Text, Button } from "react-native";
+import Toggle from "../elements/Toggle";
 // import { Title } from "react-native-paper";
 
 const Home = () => {
@@ -6,6 +7,7 @@ const Home = () => {
     <View style={styles.container}>
       <Text>Hello World</Text>
       <Button title="Click me!" />
+      <Toggle />
     </View>
   );
 };
