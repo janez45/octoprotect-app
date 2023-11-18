@@ -1,36 +1,37 @@
-import { StyleSheet, View, Text, TextInput, Button } from "react-native";
-import { useCallback, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  SafeAreaView,
+  TextInput,
+  Button,
+} from "react-native";
 
-//may require a props that passes down the ID of the device
+import { useState } from "react";
+
 const NickNamePage = () => {
-  const { control, handleSubmit } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data);
-    // Here you can perform further actions with the form data, like sending it to a server
+  const [name, setName] = useState("");
+  const nickNameData = {
+    nickName: name,
   };
-
+  const onSubmit = () => {
+    console.log(nickNameData);
+    //testing for now, will do more with backend
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.header1}>Step 2:</Text>
       <Text style={styles.header2}>
         Give your device a nickname to help you identify it more easily:
       </Text>
-      <Controller
-        control={control}
-        name="nickName"
-        render={({ field }) => (
-          <TextInput
-            {...field}
-            style={styles.input}
-            placeholder="Enter your data"
-            // Add other TextInput props as needed
-          />
-        )}
+      <TextInput
+        style={styles.input}
+        placeholder="Enter a nickname"
+        value={name}
+        onChangeText={(text) => setName(text)}
       />
-      <Button title="Save" onPress={handleSubmit(onSubmit)} />
-      {/* We can use pressable if this button doesn't look right */}
+      <Button title="Save" onPress={() => onSubmit()} />
     </View>
   );
 };
