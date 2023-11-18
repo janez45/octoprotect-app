@@ -16,7 +16,10 @@ const QRScanner = () => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    alert(
+      `Bar code with type ${type} and data ${Linking.openURL(`${data}`)}
+      )} has been scanned!`
+    ); //the url will be opened, can be changed in the future if required
   };
 
   if (hasPermission === null) {
