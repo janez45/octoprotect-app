@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Button } from "react-native";
 import Toggle from "../elements/Toggle";
-// import { Title } from "react-native-paper";
+import AlertOverlay from "./AlertOverlay";
 
 const Home = () => {
   return (

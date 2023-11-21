@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 
 import { useState } from "react";
+import AlertOverlay from "./AlertOverlay";
 
 const NickNamePage = () => {
   const [name, setName] = useState("");
@@ -24,6 +25,7 @@ const NickNamePage = () => {
         onChangeText={(text) => setName(text)}
       />
       <Button title="Save" onPress={() => onSubmit()} />
+      <AlertOverlay deviceName="Jane" />
     </View>
   );
 };

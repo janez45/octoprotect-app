@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const AlertOverlay = () => {
+const AlertOverlay = (props) => {
   const [modalVisible, setModalVisible] = useState(true);
 
   return (
@@ -16,7 +16,10 @@ const AlertOverlay = () => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.alertText}>ALERT!</Text>
-          <Text style={styles.alertMessage}>The system detected movement in Device Name</Text>
+          <Text style={styles.alertMessage}>
+            The system detected movement in{" "}
+            {props.deviceName ? props.deviceName : "a device"}
+          </Text>
           <TouchableOpacity
             style={styles.button}
             onPress={() => setModalVisible(!modalVisible)}
@@ -32,17 +35,17 @@ const AlertOverlay = () => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'red',
+    backgroundColor: "red",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -53,15 +56,15 @@ const styles = StyleSheet.create({
   },
   alertText: {
     marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 26,
-    color: 'white',
+    color: "white",
   },
   alertMessage: {
     marginBottom: 15,
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
   },
   button: {
     width: 100,
@@ -69,12 +72,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   textStyle: {
-    color: 'black',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 
