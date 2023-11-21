@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 12,
     width: 200,
+    elevation: 5,
+    shadowOffset: 20,
   },
 });
 
