@@ -2,34 +2,35 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
-  Button,
   TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
-import { devices_database } from "../databases/devices_data";
+import { useEffect, useState } from "react";
 import Toggle from "../elements/Toggle";
-import DeviceSpecificPage from "./DeviceSpecificPage";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDeviceListAction } from "../service/websocket";
+const selectDevices = state => state.deviceList.devices
 const DevicesPage = () => {
   const [showComponent, setShowComponent] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
-
+  const devices = useSelector(selectDevices)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchDeviceListAction())
+  },[])
   const handleClick = (data) => {
     setShowComponent(true);
     setSelectedDevice(data);
   };
 
   return (
-    <View>
-      <Text style={styles.title}>Devices</Text>
-      {devices_database.map((data, key) => {
+    <View style={styles.deviceList}>
+      {devices.map(device => {
         return (
-          <View style={styles.deviceContainer} key={key} id={data.nexus_id}>
-            <TouchableOpacity onPress={() => handleClick(data)}>
-              {<DeviceSpecificPage deviceData={selectedDevice} />}
+          <View style={styles.deviceContainer} key={device.id}>
+            <TouchableOpacity onPress={() => handleClick(device)}>
+              {/* {<DeviceSpecificPage deviceData={selectedDevice} />} */}
 
-              <Text style={styles.header2}>{data.nexus_nickname}</Text>
+              <Text style={styles.header2}>{device.macAddress}</Text>
               <View sylte={styles.toggleStyles}>
                 <Toggle></Toggle>
               </View>
@@ -51,6 +52,12 @@ const styles = StyleSheet.create({
   header2: {
     fontSize: 20,
     marginBottom: 20,
+  },
+  deviceList: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%'
   },
   deviceContainer: {
     borderRadius: 8,
