@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, Linking } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-const QRScanner = () => {
+const QRScanner = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -16,10 +16,9 @@ const QRScanner = () => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(
-      `Bar code with type ${type} and data ${Linking.openURL(`${data}`)}
-      )} has been scanned!`
-    ); //the url will be opened, can be changed in the future if required
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    //check if valid QR code. If yes...
+    navigation.navigate("Nickname Page");
   };
 
   if (hasPermission === null) {

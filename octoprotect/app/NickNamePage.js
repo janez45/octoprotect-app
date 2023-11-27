@@ -3,13 +3,17 @@ import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { useState } from "react";
 import AlertOverlay from "./AlertOverlay";
 
-const NickNamePage = () => {
+const NickNamePage = ({ navigation }) => {
   const [name, setName] = useState("");
   const nickNameData = {
     nickName: name,
   };
   const onSubmit = () => {
     console.log(nickNameData);
+    if (nickNameData.nickName) {
+      navigation.navigate("Devices");
+    }
+
     //testing for now, will do more with backend
   };
   return (

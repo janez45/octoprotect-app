@@ -1,22 +1,19 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import Toggle from "../elements/Toggle";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDeviceListAction } from "../service/websocket";
-const selectDevices = state => state.deviceList.devices
-const DevicesPage = () => {
+import AddNewDeviceButton from "../elements/AddNewDeviceButton";
+
+const selectDevices = (state) => state.deviceList.devices;
+const DevicesPage = ({ navigation }) => {
   const [showComponent, setShowComponent] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
-  const devices = useSelector(selectDevices)
-  const dispatch = useDispatch()
+  const devices = useSelector(selectDevices);
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchDeviceListAction())
-  },[])
+    dispatch(fetchDeviceListAction());
+  }, []);
   const handleClick = (data) => {
     setShowComponent(true);
     setSelectedDevice(data);
@@ -24,12 +21,11 @@ const DevicesPage = () => {
 
   return (
     <View style={styles.deviceList}>
-      {devices.map(device => {
+      {devices.map((device) => {
         return (
           <View style={styles.deviceContainer} key={device.id}>
             <TouchableOpacity onPress={() => handleClick(device)}>
               {/* {<DeviceSpecificPage deviceData={selectedDevice} />} */}
-
               <Text style={styles.header2}>{device.macAddress}</Text>
               <View sylte={styles.toggleStyles}>
                 <Toggle></Toggle>
@@ -38,6 +34,11 @@ const DevicesPage = () => {
           </View>
         );
       })}
+      <AddNewDeviceButton
+        onPress={() => {
+          navigation.navigate("Scan QR Code");
+        }}
+      />
     </View>
   );
 };
@@ -54,10 +55,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   deviceList: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
   },
   deviceContainer: {
     borderRadius: 8,
