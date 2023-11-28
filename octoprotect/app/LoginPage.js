@@ -1,23 +1,25 @@
 import { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, TextInput } from "react-native-paper"
+import { Button, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { connectAction } from "../service/websocket";
 
-const selectLoggingIn = state => state.app.loggingIn;
+const selectLoggingIn = (state) => state.app.loggingIn;
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('tesxuser');
-  const [password, setPassword] = useState('testpass');
-  const loggingIn = useSelector(selectLoggingIn)
-  const dispatch = useDispatch()
+  const [username, setUsername] = useState("tesxusr");
+  const [password, setPassword] = useState("testpass");
+  const loggingIn = useSelector(selectLoggingIn);
+  const dispatch = useDispatch();
   const login = () => {
-    console.log('login called')
-    dispatch(connectAction({
-      username,
-      password,
-    }))
-  }
+    console.log("login called");
+    dispatch(
+      connectAction({
+        username,
+        password,
+      })
+    );
+  };
   return (
     <View style={styles.container}>
       <TextInput
@@ -32,22 +34,19 @@ const LoginPage = () => {
         value={password}
         onChangeText={setPassword}
       />
-      <Button
-        mode="outlined"
-        loading={loggingIn}
-        onPress={login}>
+      <Button mode="outlined" loading={loggingIn} onPress={login}>
         Login
       </Button>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    display: "flex",
     gap: 16,
-    marginHorizontal: 16
-  }
-})
+    marginHorizontal: 16,
+  },
+});
 
 export default LoginPage;

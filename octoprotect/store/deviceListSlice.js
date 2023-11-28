@@ -8,12 +8,8 @@ export const deviceListSlice = createSlice({
     pairSuccess: false,
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(deviceListAction, (state, data) => {
-        state.devices = data.payload.data;
-      })
-      .addCase(pairSuccessAction, (state, data) => {
-        state.pairSuccess = true;
-      });
+    builder.addCase(deviceListAction, (state, data) => {
+      state.devices = data.payload.data;
+    });
   },
 });
