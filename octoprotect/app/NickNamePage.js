@@ -1,20 +1,25 @@
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-
 import { useState } from "react";
-import AlertOverlay from "./AlertOverlay";
+import { useDispatch } from "react-redux";
+import { pairAction } from "../service/websocket";
 
-const NickNamePage = ({ navigation }) => {
+const NickNamePage = ({ navigation, deviceData }) => {
   const [name, setName] = useState("");
+  const dispatch = useDispatch();
   const nickNameData = {
     nickName: name,
   };
   const onSubmit = () => {
     console.log(nickNameData);
+    console.log(nickNameData.nickName);
     if (nickNameData.nickName) {
+      deviceData.nickName = nickNameData.nickName;
+      dispatch(pairAction(deviceData));
+      console.log(deviceData);
+      alert(`Pair request sent`);
+      //useeffect
       navigation.navigate("Devices");
     }
-
-    //testing for now, will do more with backend
   };
   return (
     <View style={styles.container}>
@@ -29,7 +34,6 @@ const NickNamePage = ({ navigation }) => {
         onChangeText={(text) => setName(text)}
       />
       <Button title="Save" onPress={() => onSubmit()} />
-      <AlertOverlay deviceName="Jane" />
     </View>
   );
 };

@@ -1,15 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deviceListAction } from "../service/websocket";
-
+import { deviceListAction, pairSuccessAction } from "../service/websocket";
 
 export const deviceListSlice = createSlice({
-  name: 'deviceList',
+  name: "deviceList",
   initialState: {
-    devices: []
+    devices: [],
+    pairSuccess: false,
   },
   extraReducers: (builder) => {
-    builder.addCase(deviceListAction, (state, data) => {
-      state.devices = data.payload.data
-    })
+    builder
+      .addCase(deviceListAction, (state, data) => {
+        state.devices = data.payload.data;
+      })
+      .addCase(pairSuccessAction, (state, data) => {
+        state.pairSuccess = true;
+      });
   },
-})
+});

@@ -16,9 +16,28 @@ const QRScanner = ({ navigation }) => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    //check if valid QR code. If yes...
-    navigation.navigate("Nickname Page");
+    const url = new URL(data);
+    console.log(url.protocol);
+    console.log(url.searchParams.get("macAddress"));
+    console.log(url.searchParams.get("pairSecret"));
+    try {
+      if (
+        url.protocol != "octoprotect:" ||
+        url.searchParams.get("macAddress") == null ||
+        url.searchParams.get("pairSecret") == null
+      ) {
+        throw "Invalid URL, please check and try again";
+      }
+      var pairPacket = {
+        nexusMac: url.searchParams.get("macAddress"),
+        pairSecret: url.searchParams.get("pairSecret"),
+        nickName: "",
+      };
+      console.log(pairPacket);
+      navigation.navigate("Nickname Page", { deviceData: pairPacket });
+    } catch (error) {
+      alert(`Error: ${error}`);
+    }
   };
 
   if (hasPermission === null) {
