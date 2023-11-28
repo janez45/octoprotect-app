@@ -14,8 +14,8 @@ const DevicesPage = ({ navigation }) => {
     dispatch(fetchDeviceListAction());
   }, []);
   const handleClick = (data) => {
-    dispatch(deviceSlice.actions.setCurrentDevice({device: data}))
-    navigation.navigate('Device')
+    dispatch(deviceSlice.actions.setCurrentDevice({ device: data }));
+    navigation.navigate("Device");
   };
 
   return (
@@ -26,9 +26,6 @@ const DevicesPage = ({ navigation }) => {
             <TouchableOpacity onPress={() => handleClick(device)}>
               {/* {<DeviceSpecificPage deviceData={selectedDevice} />} */}
               <Text style={styles.header2}>{device.nickName}</Text>
-              <View sylte={styles.toggleStyles}>
-                <Toggle></Toggle>
-              </View>
             </TouchableOpacity>
           </View>
         );
