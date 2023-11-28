@@ -1,1 +1,1 @@
-export const BACKEND_URL = "wss://review-feature-ne-8pzqzy.octoprotect.starcatmeow.cn/ws/user"
+export const BACKEND_URL = "wss://octoprotect.starcatmeow.cn/ws/user"

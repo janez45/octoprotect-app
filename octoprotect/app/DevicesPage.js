@@ -4,19 +4,18 @@ import Toggle from "../elements/Toggle";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDeviceListAction } from "../service/websocket";
 import AddNewDeviceButton from "../elements/AddNewDeviceButton";
+import { deviceSlice } from "../store/deviceSlice";
 
 const selectDevices = (state) => state.deviceList.devices;
 const DevicesPage = ({ navigation }) => {
-  const [showComponent, setShowComponent] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState(null);
   const devices = useSelector(selectDevices);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchDeviceListAction());
   }, []);
   const handleClick = (data) => {
-    setShowComponent(true);
-    setSelectedDevice(data);
+    dispatch(deviceSlice.actions.setCurrentDevice({device: data}))
+    navigation.navigate('Device')
   };
 
   return (
@@ -26,7 +25,7 @@ const DevicesPage = ({ navigation }) => {
           <View style={styles.deviceContainer} key={device.id}>
             <TouchableOpacity onPress={() => handleClick(device)}>
               {/* {<DeviceSpecificPage deviceData={selectedDevice} />} */}
-              <Text style={styles.header2}>{device.macAddress}</Text>
+              <Text style={styles.header2}>{device.nickName}</Text>
               <View sylte={styles.toggleStyles}>
                 <Toggle></Toggle>
               </View>
