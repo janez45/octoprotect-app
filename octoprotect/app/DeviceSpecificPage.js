@@ -1,38 +1,113 @@
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from "react-native";
-// import { useState } from "react";
-// import { devices_database } from "../databases/devices";
-// import Toggle from "../elements/Toggle";
+import { useCallback, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Chip, Divider, Icon, Surface, Switch, Text, Appbar } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { armAction, disarmAction, requestStateAction, updateConfigAction } from "../service/websocket";
+import { BlinkText } from "../components/BlinkText";
 
-const DeviceSpecificPage = ( {deviceData} ) => {
-
-
+const deviceSelector = state => state.device.device
+const nexusStateSelector = state => state.device.nexusState
+const DeviceSpecificPage = ({ navigation }) => {
+  const device = useSelector(deviceSelector)
+  const nexusState = useSelector(nexusStateSelector)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    navigation.setOptions({
+      actions: [
+        <Appbar.Action icon="pencil" onPress={() => alert('edit page')}/>,
+        <Appbar.Action icon="power" onPress={() => {
+          dispatch(updateConfigAction({
+            ...device.config,
+            nexusID: device.id
+          }))
+        }}/>
+      ]
+    })
+  }, [dispatch])
+  useEffect(() => {
+    dispatch(requestStateAction({nexusID: device.id}))
+  }, [device.id])
+  const changeArmStatus = useCallback((newState) => {
+    dispatch((newState ? armAction : disarmAction)({nexusID: device.id}))
+    dispatch(requestStateAction({nexusID: device.id}))
+  }, [device.id])
   return (
-    <View sylte={styles.container}>
-      <Text style={styles.header1}>Titan Controller Center</Text>
-      <Text style={styles.header2}>{deviceData.nexus_nickname}</Text>
+    <View style={styles.container}>
+      <View style={styles.deviceNameContainer}>
+      <BlinkText style={styles.deviceName} blink={nexusState?.isTriggered}>{device.nickName}</BlinkText>
+      <Chip>{device.online ? 'Connected' : 'Disconnected'}</Chip>
+      </View>
+      <Text style={styles.extraInfo}>MAC: {device.macAddress}</Text>
+      {nexusState && <Surface mode="flat" style={styles.armedStatusContainer}>
+        <View style={styles.flexRow}>
+          <Text style={{flexGrow: 1}}>{nexusState.isArmed ? "Armed" : "Disarmed"}</Text>
+          <Switch value={nexusState.isArmed} onValueChange={changeArmStatus}/>
+        </View>
+      </Surface>}
+      <Divider />
+      <Text variant="titleLarge">Connected Titan</Text>
+      {nexusState && nexusState.titan.map(titan => <Surface mode="flat" style={styles.titanContainer}>
+        <View style={styles.flexRow}><Icon source={titan.isWorking ? "check" : "close"}/><Text variant="bodyLarge">{titan.name}</Text></View>
+        <Text variant="labelSmall">ID: {titan.id}</Text>
+      </Surface>)}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
- container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 40,
-    backgroundColor: 'white',
-    width: '100%'
-    },
-    header2: {
-        fontSize: 20,
-        marginBottom: 20,
-    },
-    header1: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 20,
-        paddingTop: 60,
-        paddingLeft: 40,
-    },
+  container: {
+    paddingHorizontal: 20,
+    // backgroundColor: 'lightblue',
+    width: '100%',
+    display: "flex",
+    gap: 8
+  },
+  deviceNameContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  deviceName: {
+    fontSize: 24,
+    fontWeight: "bold",
+    flexGrow: 1
+  },
+  header2: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  header1: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    paddingTop: 60,
+    paddingLeft: 40,
+  },
+  armedStatusContainer: {
+    padding: 16,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    borderRadius: 16
+  },
+  titanContainer: {
+    padding: 16,
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: 16
+  },
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4
+  },
+  squareButton: {
+    borderRadius: 8,
+  },
+  squareButtonText: {
+    marginHorizontal: 12,
+    marginVertical: 5,
+  },
   deviceContainer: {
     borderRadius: 8,
     paddingVertical: 15,

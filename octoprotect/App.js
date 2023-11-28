@@ -8,6 +8,7 @@ import DevicesPage from "./app/DevicesPage";
 import NavBar from "./components/navBar";
 import QRScanner from "./app/QRScanner";
 import NickNamePage from "./app/NickNamePage";
+import DeviceSpecificPage from "./app/DeviceSpecificPage";
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export const Router = () => {
       {authed && (
         <>
           <Stack.Screen name="Devices" component={DevicesPage} />
+          <Stack.Screen name="Device" component={DeviceSpecificPage} />
         </>
       )}
       <Stack.Screen name="Scan QR Code" component={QRScanner} />
