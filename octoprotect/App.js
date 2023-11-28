@@ -9,6 +9,7 @@ import NavBar from "./components/navBar";
 import QRScanner from "./app/QRScanner";
 import NickNamePage from "./app/NickNamePage";
 import DeviceSpecificPage from "./app/DeviceSpecificPage";
+import AlertOverlay from "./app/AlertOverlay";
 
 export default function App() {
   return (
