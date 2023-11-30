@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const AlertOverlay = (props) => {
-  const [modalVisible, setModalVisible] = useState(true);
+  const modalVisible = useSelector((state) => state.deviceList.showAlert);
 
   return (
     <Modal
@@ -11,6 +11,7 @@ const AlertOverlay = (props) => {
       visible={modalVisible}
       onRequestClose={() => {
         setModalVisible(!modalVisible);
+        dispatchEvent(hideAlert());
       }}
     >
       <View style={styles.centeredView}>

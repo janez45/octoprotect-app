@@ -7,10 +7,10 @@ import { connectAction } from "../service/websocket";
 const selectLoggingIn = (state) => state.app.loggingIn;
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("tesxusr");
-  const [password, setPassword] = useState("testpass");
-  const loggingIn = useSelector(selectLoggingIn);
-  const dispatch = useDispatch();
+  const [username, setUsername] = useState('tesxuser2');
+  const [password, setPassword] = useState('testpass');
+  const loggingIn = useSelector(selectLoggingIn)
+  const dispatch = useDispatch()
   const login = () => {
     console.log("login called");
     dispatch(
