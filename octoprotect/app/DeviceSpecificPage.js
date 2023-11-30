@@ -14,10 +14,10 @@ const DeviceSpecificPage = ({ navigation }) => {
   useEffect(() => {
     navigation.setOptions({
       actions: [
-        <Appbar.Action icon="pencil" onPress={() => {
+        <Appbar.Action icon="pencil" key="config" onPress={() => {
           navigation.navigate("Config")
         }}/>,
-        <Appbar.Action icon="power" onPress={() => {
+        <Appbar.Action icon="power" key="restart" onPress={() => {
           dispatch(updateConfigAction({
             ...device.config,
             nexusID: device.id
@@ -48,7 +48,7 @@ const DeviceSpecificPage = ({ navigation }) => {
       </Surface>}
       <Divider />
       <Text variant="titleLarge">Connected Titan</Text>
-      {nexusState && nexusState.titan.map(titan => <Surface mode="flat" style={styles.titanContainer}>
+      {nexusState && nexusState.titan.map(titan => <Surface mode="flat" style={styles.titanContainer} key={titan.id}>
         <View style={styles.flexRow}><Icon source={titan.isWorking ? "check" : "close"}/><Text variant="bodyLarge">{titan.name}</Text></View>
         <Text variant="labelSmall">ID: {titan.id}</Text>
       </Surface>)}

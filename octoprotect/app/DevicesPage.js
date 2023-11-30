@@ -26,9 +26,9 @@ const DevicesPage = ({ navigation }) => {
             <TouchableOpacity onPress={() => handleClick(device)}>
               {/* {<DeviceSpecificPage deviceData={selectedDevice} />} */}
               <Text style={styles.header2}>{device.nickName}</Text>
-              <View sylte={styles.toggleStyles}>
+              {/* <View sylte={styles.toggleStyles}>
                 <Toggle></Toggle>
-              </View>
+              </View> */}
             </TouchableOpacity>
           </View>
         );

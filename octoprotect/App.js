@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { MD3LightTheme, PaperProvider } from "react-native-paper";
+import { MD3LightTheme, PaperProvider, Snackbar } from "react-native-paper";
 import { Provider, useSelector } from "react-redux";
 import { store } from "./store/store";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -25,10 +25,11 @@ export default function App() {
 
 const Stack = createNativeStackNavigator();
 const selectAuthed = (state) => state.app.authed;
-
+const selectError = (state) => state.app.error;
 export const Router = () => {
   const authed = useSelector(selectAuthed);
-  return (
+  const error = useSelector(selectError);
+  return (<>
     <Stack.Navigator
       screenOptions={{
         header: (props) => <NavBar {...props} />,
@@ -49,5 +50,6 @@ export const Router = () => {
       <Stack.Screen name="Scan QR Code" component={QRScanner} />
       <Stack.Screen name="Nickname Page" component={NickNamePage} />
     </Stack.Navigator>
-  );
+    <ErrorSnackbar />
+  </>);
 };

@@ -6,7 +6,7 @@ export const deviceSlice = createSlice({
   initialState: {
     device: null,
     nexusState: null,
-    acceleration: {}
+    acceleration: {},
   },
   reducers: {
     setCurrentDevice: (state, {payload}) => {
@@ -22,13 +22,10 @@ export const deviceSlice = createSlice({
         state.nexusState.isTriggered = true
       })
       .addCase(connStateAction, (state, {payload}) => {
-        const titan = state.nexusState.titan.find(titan => titan.id === payload.titanID)
+        const titan = (state.nexusState?.titan || []).find(titan => titan.id === payload.titanID)
         console.log(state, payload, titan)
         if (!titan) return
         titan.isWorking = payload.isConnected
-      })
-      .addCase(accelAction, (state, {payload}) => {
-        state.acceleration[payload.titanID] = payload.magnitude
       })
   }
 })
