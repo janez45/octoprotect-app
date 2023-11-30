@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     width: 200,
     elevation: 5,
     shadowOffset: 20,
+    marginTop: 5,
   },
 });
 

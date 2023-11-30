@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   header2: {
     fontSize: 20,
     marginBottom: 20,
+    fontWeight: "300",
   },
   deviceList: {
     display: "flex",
