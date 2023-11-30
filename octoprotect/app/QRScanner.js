@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, Linking } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { useDispatch, useSelector } from "react-redux";
+import { pairAction } from "../service/websocket";
+import { devicePairSlice } from "../store/devicePairSlice";
 
+const pairData = (state) => state.devicePair;
 const QRScanner = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -16,9 +21,28 @@ const QRScanner = ({ navigation }) => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    //check if valid QR code. If yes...
-    navigation.navigate("Nickname Page");
+    const url = new URL(data);
+    console.log(url.protocol);
+    console.log(url.searchParams.get("macAddress"));
+    console.log(url.searchParams.get("pairSecret"));
+    try {
+      if (
+        url.protocol != "octoprotect:" ||
+        url.searchParams.get("macAddress") == null ||
+        url.searchParams.get("pairSecret") == null
+      ) {
+        throw "Invalid URL, please check and try again";
+      }
+      dispatch(
+        devicePairSlice.actions.qrCodeScanned({
+          macAddress: url.searchParams.get("macAddress"),
+          pairSecret: url.searchParams.get("pairSecret"),
+        })
+      );
+      navigation.navigate("Nickname Page");
+    } catch (error) {
+      alert(`Error: ${error}`);
+    }
   };
 
   if (hasPermission === null) {

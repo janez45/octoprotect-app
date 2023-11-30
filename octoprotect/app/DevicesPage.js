@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchDeviceListAction } from "../service/websocket";
 import AddNewDeviceButton from "../elements/AddNewDeviceButton";
 import { deviceSlice } from "../store/deviceSlice";
+import AlertOverlay from "./AlertOverlay.js";
 
 const selectDevices = (state) => state.deviceList.devices;
 const DevicesPage = ({ navigation }) => {
@@ -38,6 +39,7 @@ const DevicesPage = ({ navigation }) => {
           navigation.navigate("Scan QR Code");
         }}
       />
+      <AlertOverlay />
     </View>
   );
 };
@@ -68,10 +70,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     backgroundColor: "#DDEFE5",
-    // shadowColor: '#171717',
-    // shadowOffset: {width: -2, height: 4},
-    // shadowOpacity: 0.9,
-    // shadowRadius: 3,
   },
   toggleStyles: {
     marginTop: "30%",

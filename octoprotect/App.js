@@ -8,8 +8,10 @@ import DevicesPage from "./app/DevicesPage";
 import NavBar from "./components/navBar";
 import QRScanner from "./app/QRScanner";
 import NickNamePage from "./app/NickNamePage";
+import "react-native-url-polyfill/auto";
 import DeviceSpecificPage from "./app/DeviceSpecificPage";
 import ConfigDevicePage from "./app/ConfigDevicePage";
+import AlertOverlay from "./app/AlertOverlay";
 
 export default function App() {
   return (
