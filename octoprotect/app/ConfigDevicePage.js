@@ -1,56 +1,57 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Chip, Divider, Icon, Surface, Switch, Text, Appbar } from "react-native-paper";
+import { Button, Chip, Divider, Icon, Surface, Switch, Text, Appbar, ProgressBar, MD3Colors } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { armAction, disarmAction, requestStateAction, updateConfigAction } from "../service/websocket";
+import { armAction, disarmAction, requestStateAction, startStreamAction, stopStreamAction, updateConfigAction } from "../service/websocket";
 import { BlinkText } from "../components/BlinkText";
+import Slider from "@react-native-community/slider";
 
 const deviceSelector = state => state.device.device
+const accelerationSelector = state => state.device.acceleration
 const nexusStateSelector = state => state.device.nexusState
-const DeviceSpecificPage = ({ navigation }) => {
+const ConfigDevicePage = ({ navigation }) => {
   const device = useSelector(deviceSelector)
   const nexusState = useSelector(nexusStateSelector)
+  const acceleration = useSelector(accelerationSelector)
+  const [sensitivity, setSensitivity] = useState(0)
+  useEffect(() => {
+    setSensitivity(device.config.sensitivity)
+  }, [device.config.sensitivity])
+  useEffect(() => {
+    dispatch(startStreamAction({nexusID: device.id}))
+    return () => {
+      dispatch(stopStreamAction({nexusID: device.id}))
+    }
+  }, [])
   const dispatch = useDispatch()
-  useEffect(() => {
-    navigation.setOptions({
-      actions: [
-        <Appbar.Action icon="pencil" key="config" onPress={() => {
-          navigation.navigate("Config")
-        }}/>,
-        <Appbar.Action icon="power" key="restart" onPress={() => {
-          dispatch(updateConfigAction({
-            ...device.config,
-            nexusID: device.id
-          }))
-        }}/>
-      ]
-    })
-  }, [dispatch])
-  useEffect(() => {
-    dispatch(requestStateAction({nexusID: device.id}))
-  }, [device.id])
-  const changeArmStatus = useCallback((newState) => {
-    dispatch((newState ? armAction : disarmAction)({nexusID: device.id}))
-    dispatch(requestStateAction({nexusID: device.id}))
-  }, [device.id])
   return (
     <View style={styles.container}>
       <View style={styles.deviceNameContainer}>
-      <BlinkText style={styles.deviceName} blink={nexusState?.isTriggered}>{device.nickName}</BlinkText>
+      <Text style={styles.deviceName}>{device.nickName}</Text>
       <Chip>{device.online ? 'Connected' : 'Disconnected'}</Chip>
       </View>
       <Text style={styles.extraInfo}>MAC: {device.macAddress}</Text>
       {nexusState && <Surface mode="flat" style={styles.armedStatusContainer}>
         <View style={styles.flexRow}>
-          <Text style={{flexGrow: 1}}>{nexusState.isArmed ? "Armed" : "Disarmed"}</Text>
-          <Switch value={nexusState.isArmed} onValueChange={changeArmStatus}/>
+          <Text>Sensitivity: {sensitivity.toFixed(2)}</Text>
+          <Slider style={{flexGrow: 1}} minimumValue={0.2} maximumValue={3} value={sensitivity} onValueChange={setSensitivity}/>
+        </View>
+        <View style={styles.flexRow}>
+          <Button icon="restart">Reset</Button>
+          <Button icon="check">Apply</Button>
         </View>
       </Surface>}
       <Divider />
-      <Text variant="titleLarge">Connected Titan</Text>
+      <Text variant="titleLarge">Titans</Text>
       {nexusState && nexusState.titan.map(titan => <Surface mode="flat" style={styles.titanContainer} key={titan.id}>
         <View style={styles.flexRow}><Icon source={titan.isWorking ? "check" : "close"}/><Text variant="bodyLarge">{titan.name}</Text></View>
         <Text variant="labelSmall">ID: {titan.id}</Text>
+        {acceleration[titan.id] !== undefined && <View>
+          <Text variant="bodySmall">Acceleration: {acceleration[titan.id].toFixed(2)}</Text>
+          <ProgressBar progress={acceleration[titan.id]/2} color={acceleration[titan.id] >= sensitivity ? MD3Colors.error50 : MD3Colors.primary50} />
+          {/* <ProgressBar progress={0.5} /> */}
+        </View>}
+        
       </Surface>)}
     </View>
   );
@@ -131,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeviceSpecificPage;
+export default ConfigDevicePage;
