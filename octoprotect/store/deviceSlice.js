@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { connStateAction, disarmAction, movementTriggerAction, nexusStateAction } from "../service/websocket";
+import { accelAction, connStateAction, disarmAction, movementTriggerAction, nexusStateAction } from "../service/websocket";
 
 export const deviceSlice = createSlice({
   name: 'device',
   initialState: {
     device: null,
     nexusState: null,
+    acceleration: {}
   },
   reducers: {
     setCurrentDevice: (state, {payload}) => {
@@ -25,6 +26,9 @@ export const deviceSlice = createSlice({
         console.log(state, payload, titan)
         if (!titan) return
         titan.isWorking = payload.isConnected
+      })
+      .addCase(accelAction, (state, {payload}) => {
+        state.acceleration[payload.titanID] = payload.magnitude
       })
   }
 })
