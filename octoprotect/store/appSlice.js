@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { connectAction, errorAction, wsConnectedAction, wsDisconnectedAction } from "../service/websocket";
+import { connectAction, errorAction, movementTriggerAction, wsConnectedAction, wsDisconnectedAction } from "../service/websocket";
 
 export const appSlice = createSlice({
   name: 'app',
@@ -7,7 +7,13 @@ export const appSlice = createSlice({
     connected: false,
     authed: false,
     loggingIn: false,
+    showAlert: false,
     error: "",
+  },
+  reducers: {
+    hideAlert: (state) => {
+      state.showAlert = false
+    }
   },
   extraReducers: builder => {
     builder
@@ -25,5 +31,8 @@ export const appSlice = createSlice({
       .addCase(errorAction, (state, {payload}) => {
         state.error = payload.message
       })
+      .addCase(movementTriggerAction, (state) => {
+        state.showAlert = true;
+      });
   }
 })

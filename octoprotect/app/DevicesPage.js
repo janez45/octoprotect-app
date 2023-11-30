@@ -36,7 +36,6 @@ const DevicesPage = ({ navigation }) => {
           navigation.navigate("Scan QR Code");
         }}
       />
-      <AlertOverlay />
     </View>
   );
 };

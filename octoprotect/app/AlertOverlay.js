@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { appSlice } from "../store/appSlice";
 
 const AlertOverlay = (props) => {
-  const modalVisible = useSelector((state) => state.deviceList.showAlert);
-
+  const modalVisible = useSelector((state) => state.app.showAlert);
+  const dispatch = useDispatch();
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
-        setModalVisible(!modalVisible);
-        dispatchEvent(hideAlert());
+        dispatch(appSlice.actions.hideAlert());
       }}
     >
       <View style={styles.centeredView}>
@@ -23,7 +24,7 @@ const AlertOverlay = (props) => {
           </Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setModalVisible(!modalVisible)}
+            onPress={() => dispatch(appSlice.actions.hideAlert())}
           >
             <Text style={styles.textStyle}>OK</Text>
           </TouchableOpacity>

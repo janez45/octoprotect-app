@@ -12,6 +12,7 @@ import "react-native-url-polyfill/auto";
 import DeviceSpecificPage from "./app/DeviceSpecificPage";
 import ConfigDevicePage from "./app/ConfigDevicePage";
 import AlertOverlay from "./app/AlertOverlay";
+import { ErrorSnackbar } from "./components/ErrorSnackbar"
 
 export default function App() {
   return (
@@ -19,6 +20,8 @@ export default function App() {
       <PaperProvider theme={MD3LightTheme}>
         <NavigationContainer theme={MD3LightTheme}>
           <Router />
+          <ErrorSnackbar />
+          <AlertOverlay />
         </NavigationContainer>
       </PaperProvider>
     </Provider>
@@ -30,7 +33,6 @@ const selectAuthed = (state) => state.app.authed;
 const selectError = (state) => state.app.error;
 export const Router = () => {
   const authed = useSelector(selectAuthed);
-  const error = useSelector(selectError);
   return (<>
     <Stack.Navigator
       screenOptions={{
@@ -52,6 +54,5 @@ export const Router = () => {
       <Stack.Screen name="Scan QR Code" component={QRScanner} />
       <Stack.Screen name="Nickname Page" component={NickNamePage} />
     </Stack.Navigator>
-    <ErrorSnackbar />
   </>);
 };
