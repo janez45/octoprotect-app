@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { connectAction, wsConnectedAction, wsDisconnectedAction } from "../service/websocket";
+import { connectAction, errorAction, wsConnectedAction, wsDisconnectedAction } from "../service/websocket";
 
 export const appSlice = createSlice({
   name: 'app',
@@ -7,6 +7,7 @@ export const appSlice = createSlice({
     connected: false,
     authed: false,
     loggingIn: false,
+    error: "",
   },
   extraReducers: builder => {
     builder
@@ -20,6 +21,9 @@ export const appSlice = createSlice({
       })
       .addCase(connectAction, state => {
         state.loggingIn = true;
+      })
+      .addCase(errorAction, (state, {payload}) => {
+        state.error = payload.message
       })
   }
 })
