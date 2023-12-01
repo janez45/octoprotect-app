@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDeviceListAction, pairAction } from "../service/websocket";
 import { devicePairSlice } from "../store/devicePairSlice";
+import { deviceSlice } from "../store/deviceSlice";
 
 const pairData = (state) => state.devicePair;
 const NickNamePage = ({ navigation }) => {
@@ -22,7 +23,8 @@ const NickNamePage = ({ navigation }) => {
     nickName: name,
   };
   const onSubmit = () => {
-    if (nickNameData.nickName) {
+    if (!nickNameData.nickName) return;
+    if (deviceData.mode === "nexus") {
       alert(`Pair request sent`);
       console.log(deviceData);
       dispatch(
@@ -31,6 +33,15 @@ const NickNamePage = ({ navigation }) => {
           ...deviceData,
         })
       );
+    } else if (deviceData.mode === "titanw") {
+      dispatch(
+        deviceSlice.actions.pairTitanW({
+          uuid: deviceData.uuid,
+          nickName: name
+        })
+      )
+      navigation.goBack()
+      navigation.goBack()
     }
   };
   return (

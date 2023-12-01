@@ -97,6 +97,9 @@ export const WebsocketMiddleware = (socket) => (params) => (next) => (action) =>
       type: 'server/' + data.type,
       payload: data
     })
+    if (data.type === "conn-state" && getState().device.configDirty && data.isConnected) {
+      dispatch(requestStateAction({nexusID: data.nexusID}))
+    }
   }
   switch (type) {
     case connectAction().type:

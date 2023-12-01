@@ -4,16 +4,23 @@ import { pairSuccessAction, pairAction } from "../service/websocket";
 export const devicePairSlice = createSlice({
   name: "devicePair",
   initialState: {
+    mode: "",
     nexusMac: "",
     pairSecret: "",
+    uuid: "",
     pairSuccess: false,
   },
   reducers: {
     qrCodeScanned: (state, { payload }) => {
-      state.nexusMac = payload.macAddress;
-      state.pairSecret = payload.pairSecret;
+      state.mode = payload.mode;
+      if (payload.mode === "nexus") {
+        state.nexusMac = payload.macAddress;
+        state.pairSecret = payload.pairSecret;
+      } else if (payload.mode === "titanw") {
+        state.uuid = payload.uuid
+      }
     },
-    resetPairSuccess: (state, { payload }) => {
+    resetPairSuccess: (state) => {
       state.pairSuccess = false;
     },
   },

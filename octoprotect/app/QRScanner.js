@@ -27,18 +27,32 @@ const QRScanner = ({ navigation }) => {
     console.log(url.searchParams.get("pairSecret"));
     try {
       if (
-        url.protocol != "octoprotect:" ||
-        url.searchParams.get("macAddress") == null ||
-        url.searchParams.get("pairSecret") == null
+        url.protocol != "octoprotect:"
       ) {
         throw "Invalid URL, please check and try again";
       }
-      dispatch(
-        devicePairSlice.actions.qrCodeScanned({
-          macAddress: url.searchParams.get("macAddress"),
-          pairSecret: url.searchParams.get("pairSecret"),
-        })
-      );
+      if (
+        url.host === "pair" && url.searchParams.get("macAddress") && url.searchParams.get("pairSecret")
+      ) {
+        dispatch(
+          devicePairSlice.actions.qrCodeScanned({
+            mode: "nexus",
+            macAddress: url.searchParams.get("macAddress"),
+            pairSecret: url.searchParams.get("pairSecret"),
+          })
+        );
+      } else if (
+        url.host === "pair-titan-w" && url.searchParams.get("uuid")
+      ) {
+        dispatch(
+          devicePairSlice.actions.qrCodeScanned({
+            mode: "titanw",
+            uuid: url.searchParams.get("uuid")
+          })
+        );
+      } else {
+        throw "Invalid URL, please check and try again";
+      }
       navigation.navigate("Nickname Page");
     } catch (error) {
       alert(`Error: ${error}`);

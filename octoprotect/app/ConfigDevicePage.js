@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Chip, Divider, Icon, Surface, Switch, Text, Appbar, ProgressBar, MD3Colors } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { armAction, disarmAction, requestStateAction, startStreamAction, stopStreamAction, updateConfigAction } from "../service/websocket";
 import { BlinkText } from "../components/BlinkText";
 import Slider from "@react-native-community/slider";
+import { deviceSlice } from "../store/deviceSlice";
+import { AccelerationDisplay } from "../components/AccelerationDisplay";
 
 const deviceSelector = state => state.device.device
 const accelerationSelector = state => state.device.acceleration
@@ -23,7 +25,39 @@ const ConfigDevicePage = ({ navigation }) => {
       dispatch(stopStreamAction({nexusID: device.id}))
     }
   }, [])
+  const titans = useMemo(() => {
+    const result = {}
+    if (nexusState?.titan) {
+        nexusState.titan.forEach(titan => {
+        result[titan.id] = {
+          name: titan.name,
+          isConnected: titan.isWorking,
+        }
+      })
+    }
+    device.config.titanW.forEach(titanW => {
+      if (!result[titanW.uuid]) {
+        result[titanW.uuid] = {}
+      }
+      result[titanW.uuid] = {
+        ...result[titanW.uuid],
+        name: titanW.nickName,
+        enabled: titanW.enabled,
+      }
+    })
+    return Object.entries(result).map(([id, titan]) => ({
+      ...titan,
+      id,
+    }))
+  }, [device, nexusState]);
   const dispatch = useDispatch()
+  const applyConfig = useCallback(() => {
+    dispatch(updateConfigAction({
+      ...device.config,
+      nexusID: device.id
+    }))
+    navigation.goBack()
+  },[dispatch, device])
   return (
     <View style={styles.container}>
       <View style={styles.deviceNameContainer}>
@@ -34,25 +68,46 @@ const ConfigDevicePage = ({ navigation }) => {
       {nexusState && <Surface mode="flat" style={styles.armedStatusContainer}>
         <View style={styles.flexRow}>
           <Text>Sensitivity: {sensitivity.toFixed(2)}</Text>
-          <Slider style={{flexGrow: 1}} minimumValue={0.2} maximumValue={3} value={sensitivity} onValueChange={setSensitivity}/>
-        </View>
-        <View style={styles.flexRow}>
-          <Button icon="restart">Reset</Button>
-          <Button icon="check">Apply</Button>
+          <Slider style={{flexGrow: 1}} minimumValue={0} maximumValue={2} value={sensitivity} onValueChange={setSensitivity}/>
         </View>
       </Surface>}
       <Divider />
-      <Text variant="titleLarge">Titans</Text>
-      {nexusState && nexusState.titan.map(titan => <Surface mode="flat" style={styles.titanContainer} key={titan.id}>
+      <View style={styles.flexRow}>
+        <Text variant="titleLarge" style={{flexGrow: 1}}>Titans</Text>
+        <Button onPress={() => navigation.navigate("Scan QR Code")}>Pair Titan W</Button>
+      </View>
+      {/* {nexusState && nexusState.titan.map(titan => <Surface mode="flat" style={styles.titanContainer} key={titan.id}>
         <View style={styles.flexRow}><Icon source={titan.isWorking ? "check" : "close"}/><Text variant="bodyLarge">{titan.name}</Text></View>
         <Text variant="labelSmall">ID: {titan.id}</Text>
         {acceleration[titan.id] !== undefined && <View>
           <Text variant="bodySmall">Acceleration: {acceleration[titan.id].toFixed(2)}</Text>
           <ProgressBar progress={acceleration[titan.id]/2} color={acceleration[titan.id] >= sensitivity ? MD3Colors.error50 : MD3Colors.primary50} />
-          {/* <ProgressBar progress={0.5} /> */}
         </View>}
         
+      </Surface>)} */}
+      {titans.map(titan => <Surface mode="flat" style={styles.titanContainer} key={titan.id}>
+        <View style={styles.flexRow}>
+          <Icon source={titan.isConnected ? "check" : "close"}/>
+          <Text variant="bodyLarge">{titan.name}</Text>
+        </View>
+        <Text variant="labelSmall">ID: {titan.id}</Text>
+        <AccelerationDisplay titanID={titan.id} sensitivity={sensitivity} />
+        {titan.enabled !== undefined && <View style={styles.flexRow}>
+          <Text>{titan.enabled ? "Enabled": "Disabled"}</Text>
+          <Switch
+            value={titan.enabled}
+            onValueChange={value => dispatch(deviceSlice.actions.toggleTitanW({uuid: titan.id, enabled: value}))}
+            />
+          <View style={{flexGrow: 1}} />
+          <Button
+            textColor={MD3Colors.error50}
+            onPress={() => dispatch(deviceSlice.actions.deleteTitanW({uuid: titan.id}))}
+          >
+            Remove
+          </Button>
+        </View>}
       </Surface>)}
+      <Button mode="outlined" icon="check" onPress={applyConfig}>Apply Changes</Button>
     </View>
   );
 };

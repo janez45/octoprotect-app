@@ -19,12 +19,14 @@ import {
 } from "../service/websocket";
 import { BlinkText } from "../components/BlinkText";
 
-const deviceSelector = (state) => state.device.device;
-const nexusStateSelector = (state) => state.device.nexusState;
+const deviceSelector = state => state.device.device
+const nexusStateSelector = state => state.device.nexusState
+const configDirtySelector = state => state.device.configDirty
 const DeviceSpecificPage = ({ navigation }) => {
-  const device = useSelector(deviceSelector);
-  const nexusState = useSelector(nexusStateSelector);
-  const dispatch = useDispatch();
+  const device = useSelector(deviceSelector)
+  const nexusState = useSelector(nexusStateSelector)
+  const configDirty = useSelector(configDirtySelector)
+  const dispatch = useDispatch()
   useEffect(() => {
     navigation.setOptions({
       actions: [
@@ -51,22 +53,22 @@ const DeviceSpecificPage = ({ navigation }) => {
     });
   }, [dispatch]);
   useEffect(() => {
-    dispatch(requestStateAction({ nexusID: device.id }));
-  }, [device.id]);
-  const changeArmStatus = useCallback(
-    (newState) => {
-      dispatch((newState ? armAction : disarmAction)({ nexusID: device.id }));
-      dispatch(requestStateAction({ nexusID: device.id }));
-    },
-    [device.id]
-  );
+    dispatch(requestStateAction({nexusID: device.id}))
+  }, [device.id])
+  const changeArmStatus = useCallback((newState) => {
+    dispatch((newState ? armAction : disarmAction)({nexusID: device.id}))
+    dispatch(requestStateAction({nexusID: device.id}))
+  }, [device.id])
+  useEffect(() => {
+    if (configDirty && nexusState.titan.filter(t => !t.isWorking) === 0) {
+      dispatch(requestStateAction({nexusID: device.id}))
+    }
+  }, [nexusState])
   return (
     <View style={styles.container}>
       <View style={styles.deviceNameContainer}>
-        <BlinkText style={styles.deviceName} blink={nexusState?.isTriggered}>
-          {device.nickName}
-        </BlinkText>
-        <Chip>{device.online ? "Connected" : "Disconnected"}</Chip>
+      <BlinkText style={styles.deviceName} blink={nexusState?.isTriggered}>Mariya's Items</BlinkText>
+      <Chip>{device.online ? 'Connected' : 'Disconnected'}</Chip>
       </View>
       <Text style={styles.extraInfo}>MAC: {device.macAddress}</Text>
       {nexusState && (
