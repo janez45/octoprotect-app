@@ -23,11 +23,11 @@ This repository contains frontend mobile app of Octoprotect, which features the 
 Original Figma Design
 <img width="1198" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/c4b2646c-e6dc-4cb0-9c48-589a992b54b2">
 
-Final Outcome
-<img width="100" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/aac90b0d-aa04-4937-b92f-fa6fb82ad895">
-<img width="100" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/b8424539-e4f9-4bfd-8edb-0364b1f3314f">
-<img width="100" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/98fb8f06-2536-4bd5-a0c0-69a4f3895255">
-<img width="100" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/274f7d51-dd83-4a05-ab1b-9b3072044077">
+Final outcome   
+<img width="240" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/aac90b0d-aa04-4937-b92f-fa6fb82ad895">
+<img width="240" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/b8424539-e4f9-4bfd-8edb-0364b1f3314f">
+<img width="240" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/98fb8f06-2536-4bd5-a0c0-69a4f3895255">
+<img width="240" alt="image" src="https://github.com/janez45/octoprotect-app/assets/97042818/274f7d51-dd83-4a05-ab1b-9b3072044077">
 
 
 
